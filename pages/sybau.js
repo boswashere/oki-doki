@@ -1,4 +1,8 @@
+import { useState } from 'react'
+
 export default function x1() {
+  const [started, setStarted] = useState(false)
+
   return (
     <>
       <style>{`
@@ -28,16 +32,37 @@ export default function x1() {
           width: 300px;
           height: 166px;
         }
+        .overlay {
+          position: fixed;
+          inset: 0;
+          background: black;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          user-select: none;
+          font-size: 2rem;
+          z-index: 9999;
+        }
       `}</style>
-      <div className="container">
+
+      {!started && (
+        <div className="overlay" onClick={() => setStarted(true)}>
+          click to continue
+        </div>
+      )}
+
+      <div className="container" style={{ filter: started ? 'none' : 'blur(3px)' }}>
         <div className="text">please kill me, Sarah</div>
-        <iframe
-          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/keepsecrets/you-will-never-change&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
-          frameBorder="no"
-          scrolling="no"
-          allow="autoplay"
-          title="You Will Never Change - KeepSecrets"
-        />
+        {started && (
+          <iframe
+            src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/keepsecrets/you-will-never-change&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
+            frameBorder="no"
+            scrolling="no"
+            allow="autoplay"
+            title="You Will Never Change - KeepSecrets"
+          />
+        )}
       </div>
     </>
   )
