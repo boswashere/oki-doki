@@ -17,14 +17,14 @@ export default function Home() {
     try {
       const res = await fetch('/api/save_script', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ script: text }),
+        headers: { 'Content-Type': 'application/json' },
       })
       if (!res.ok) throw new Error('i wanna die')
       const data = await res.json()
       const id = data.url.split('/').pop()
       const domain = window.location.origin
-      setResult(`loadstring(game:HttpGet("${domain}/api/scripts/${id}"))()`)
+      setResult(`loadstring(game:GetService("HttpService"):GetAsync("${domain}/api/scripts/${id}"))()`)
     } catch {
       setError('i wanna die')
       setResult('')
@@ -33,57 +33,89 @@ export default function Home() {
     }
   }
 
-  return (
-    <main style={{
-      maxWidth: 600, margin: '3rem auto', fontFamily: 'monospace',
-      padding: '1rem', color: '#111',
-    }}>
-      <h1 style={{
-        textAlign: 'center', fontSize: '2rem',
-        marginBottom: '1.5rem', textTransform: 'lowercase',
-      }}>sybau uploader</h1>
+  const styles = {
+    container: {
+      maxWidth: 600,
+      margin: '2rem auto',
+      fontFamily: 'Arial, sans-serif',
+      padding: '0 1rem',
+    },
+    title: {
+      textAlign: 'center' as const,
+      marginBottom: '1.5rem',
+      fontWeight: 600,
+      fontSize: '2rem',
+      textTransform: 'lowercase' as React.CSSProperties['textTransform'],
+      userSelect: 'none' as const,
+    },
+    textarea: {
+      width: '100%',
+      padding: '1rem',
+      fontSize: '1rem',
+      borderRadius: 6,
+      border: '1px solid #ccc',
+      resize: 'vertical' as const,
+      boxSizing: 'border-box' as const,
+      fontFamily: 'monospace',
+      transition: 'all 0.2s ease',
+      textTransform: 'lowercase' as React.CSSProperties['textTransform'],
+      outline: 'none',
+    },
+    error: {
+      color: 'red',
+      marginTop: '0.5rem',
+      textTransform: 'lowercase' as React.CSSProperties['textTransform'],
+    },
+    button: {
+      marginTop: '1rem',
+      width: '100%',
+      padding: '0.75rem',
+      fontSize: '1.1rem',
+      borderRadius: 6,
+      border: 'none',
+      backgroundColor: '#0070f3',
+      color: '#fff',
+      cursor: loading ? 'not-allowed' : 'pointer',
+      textTransform: 'lowercase' as React.CSSProperties['textTransform'],
+      userSelect: 'none' as const,
+      transition: 'background-color 0.3s ease',
+    },
+    input: {
+      marginTop: '1.5rem',
+      width: '100%',
+      padding: '0.75rem',
+      fontSize: '1rem',
+      borderRadius: 6,
+      border: '1px solid #ccc',
+      backgroundColor: '#f9f9f9',
+      userSelect: 'all' as const,
+      fontFamily: 'monospace',
+      textTransform: 'lowercase' as React.CSSProperties['textTransform'],
+    },
+  }
 
+  return (
+    <main style={styles.container}>
+      <h1 style={styles.title}>sybau uploader</h1>
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}
         rows={12}
-        placeholder=""
-        style={{
-          width: '100%', padding: '1rem', borderRadius: 6,
-          fontSize: '1rem', resize: 'vertical',
-          border: '1px solid #ccc', fontFamily: 'monospace',
-          textTransform: 'lowercase',
-        }}
+        style={styles.textarea}
         disabled={loading}
+        spellCheck={false}
       />
-
-      {error && <p style={{ color: 'red', marginTop: 8 }}>{error}</p>}
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        style={{
-          marginTop: 12, width: '100%', padding: '0.75rem',
-          backgroundColor: '#0070f3', color: '#fff',
-          border: 'none', borderRadius: 6,
-          cursor: loading ? 'not-allowed' : 'pointer',
-          fontSize: '1rem', textTransform: 'lowercase',
-        }}
-      >
+      {error && <p style={styles.error}>{error}</p>}
+      <button onClick={handleSubmit} disabled={loading} style={styles.button}>
         {loading ? 'uploading...' : 'upload'}
       </button>
-
       {result && (
         <input
+          type="text"
           value={result}
           readOnly
           onFocus={e => e.target.select()}
-          style={{
-            marginTop: 20, width: '100%', padding: '0.75rem',
-            fontSize: '0.95rem', borderRadius: 6,
-            border: '1px solid #ccc', fontFamily: 'monospace',
-            backgroundColor: '#f9f9f9', textTransform: 'lowercase',
-          }}
+          style={styles.input}
         />
       )}
     </main>
