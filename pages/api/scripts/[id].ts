@@ -7,17 +7,18 @@ const redis = new Redis({
 })
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {
-    method,
-    query: { id },
-  } = req
-  if (method !== 'GET') {
-    res.setHeader('Allow', 'GET')
-    return res.status(405).end()
+  const { id } = req.query
+
+  if (!id || typeof id !== 'string') {
+    return res.status(400).send('kys')
   }
-  if (typeof id !== 'string' || !id) return res.status(400).end()
+
   const script = await redis.get<string>(`script:${id}`)
-  if (!script) return res.status(404).end()
+
+  if (!script) {
+    return res.status(404).send('-- why are you looking here man\n-- kys')
+  }
+
   res.setHeader('Content-Type', 'text/plain')
-  return res.status(200).send(script)
+  res.status(200).send(script)
 }
