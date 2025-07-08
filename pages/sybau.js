@@ -53,7 +53,7 @@ export default function x1() {
       )}
 
       <div className="container" style={{ filter: started ? 'none' : 'blur(3px)' }}>
-        <div className="text">please kill me, Sarah</div>
+        <div className="text">boii even tho youre a freaky skid u can listen to keepsecrets here for free ykkkk</div>
         {started && (
           <iframe
             src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/keepsecrets/you-will-never-change&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
