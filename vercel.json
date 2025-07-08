@@ -1,14 +1,19 @@
 {
   "routes": [
     {
-      "src": "^/api/scripts/.*$",
+      "src": "^/api/scripts/.*",
+      "methods": ["GET"],
       "headers": {
-        "x-allow": "true"
+        "Cache-Control": "no-store"
       },
       "continue": true
     },
     {
-      "src": "/.*",
+      "src": "^/api/.*",
+      "status": 403
+    },
+    {
+      "src": ".*",
       "status": 403
     }
   ]
