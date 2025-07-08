@@ -1,15 +1,19 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-forwarded-host",
-          "value": "^(?!oki-doki\\.vercel\\.app$).*"
-        }
-      ],
-      "destination": "/sybau"
+      "src": "/(.*)",
+      "headers": {
+        "x-vercel-forwarded-host": "^(?!oki-doki\\.vercel\\.app$).*"
+      },
+      "status": 403,
+      "continue": false
+    },
+    {
+      "src": "/(.*)",
+      "status": 308,
+      "headers": {
+        "Location": "/sybau"
+      }
     }
   ]
 }
