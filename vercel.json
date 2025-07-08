@@ -1,20 +1,36 @@
 {
-  "routes": [
+  "redirects": [
     {
-      "src": "^/api/scripts/.*",
-      "methods": ["GET"],
-      "headers": {
-        "Cache-Control": "no-store"
-      },
-      "continue": true
+      "source": "/api/save_script",
+      "has": [
+        { "type": "method", "value": "POST" }
+      ],
+      "destination": "/api/save_script",
+      "permanent": false
     },
     {
-      "src": "^/api/.*",
-      "status": 403
+      "source": "/api/:path*",
+      "destination": "/api/:path*",
+      "permanent": false
     },
     {
-      "src": ".*",
-      "status": 403
+      "source": "/sybau",
+      "destination": "/sybau",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        { "type": "host", "value": "oki-doki.vercel.app" }
+      ],
+      "statusCode": 403,
+      "destination": "/sybau",
+      "permanent": false
     }
   ]
 }
