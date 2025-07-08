@@ -1,19 +1,15 @@
 {
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "^/api/scripts/.*$",
       "headers": {
-        "x-vercel-forwarded-host": "^(?!oki-doki\\.vercel\\.app$).*"
+        "x-allow": "true"
       },
-      "status": 403,
-      "continue": false
+      "continue": true
     },
     {
-      "src": "/(.*)",
-      "status": 308,
-      "headers": {
-        "Location": "/sybau"
-      }
+      "src": "/.*",
+      "status": 403
     }
   ]
 }
