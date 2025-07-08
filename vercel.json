@@ -1,0 +1,20 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "oki-doki.vercel.app"
+        }
+      ],
+      "destination": "/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "destination": "https://oki-doki.vercel.app/sybau",
+      "permanent": true
+    }
+  ]
+}
