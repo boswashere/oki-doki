@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    {
+      "source": "/api/scripts/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "referer",
+          "value": "^https://oki-doki\\.vercel\\.app"
+        }
+      ],
+      "destination": "/api/scripts/:path*",
+      "statusCode": 200
+    },
+    {
+      "source": "/api/scripts/:path*",
+      "destination": "/sybau",
+      "statusCode": 403
+    }
+  ]
+}
