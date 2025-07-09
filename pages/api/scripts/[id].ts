@@ -1,14 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getScript } from '../save_script'
 
-const scripts: Record<string, string> = {}
+function isRobloxUA(ua: string | undefined): boolean {
+  if (!ua) return false
+  return ua.toLowerCase().includes('roblox')
+}
 
-export default function someshit(req: NextApiRequest, res: NextApiResponse) {
+function someshit(): string {
+  const a = Array.from({ length: 50 }, () => Math.floor(Math.random() * 999999999))
+  return '_bsdata0 = {' + a.join(',') + '}\n'
+}
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const id = req.query.id as string
-  if (!id || !scripts[id]) return res.status(404).send('kms')
+  const ua = req.headers['user-agent']
 
-  const ua = req.headers['user-agent'] ?? ''
-  if (!ua.toLowerCase().includes('roblox')) return res.status(403).send('i wanna die')
+  if (!isRobloxUA(ua)) return res.status(403).send('-- kms')
 
-  res.setHeader('content-type', 'text/plain')
-  res.status(200).send(scripts[id])
+  const script = getScript(id)
+  if (!script) return res.status(404).send('-- kill me')
+
+  const bs = someshit()
+  const final = bs + '\n' + script
+
+  res.setHeader('Content-Type', 'text/plain')
+  res.status(200).send(final)
 }
