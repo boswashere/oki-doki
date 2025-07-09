@@ -8,19 +8,27 @@ export default function Home() {
 
   const handleSubmit = async () => {
     if (!text.trim()) return setError('kms')
+
     setError('')
     setLoading(true)
+
     try {
       const res = await fetch('/api/save_script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ script: text }),
       })
+
       if (!res.ok) throw new Error()
+
       const data = await res.json()
       const id = data.url.split('/').pop()
       const domain = window.location.origin
-      setResult(`loadstring(game:HttpGet("${domain}/api/scripts/${id}",true))()`)
+      setResult(`loadstring(game:HttpGet("${domain}/api/scripts/${id}", true, {
+  ["User-Agent"] = "roblox-custom-ua-0987fhsdkj",
+  ["X-Auth-Token"] = "super-secret-token-23423",
+  ["X-HWID"] = tostring(game.Players.LocalPlayer.UserId) .. "-" .. tostring(game:GetService("RbxAnalyticsService"):GetClientId())
+}))()`)
     } catch {
       setError('i wanna die')
       setResult('')
@@ -34,7 +42,7 @@ export default function Home() {
       <div style={{ textAlign: 'center', marginBottom: 20, fontSize: '1.5rem' }}>sybau uploader</div>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={e => setText(e.target.value)}
         rows={12}
         style={{
           width: '100%',
@@ -60,6 +68,7 @@ export default function Home() {
           color: '#fff',
           border: 'none',
           borderRadius: 6,
+          cursor: loading ? 'not-allowed' : 'pointer',
         }}
       >
         {loading ? 'uploading...' : 'upload'}
@@ -69,7 +78,7 @@ export default function Home() {
           type="text"
           value={result}
           readOnly
-          onFocus={(e) => e.target.select()}
+          onFocus={e => e.target.select()}
           style={{
             marginTop: 20,
             width: '100%',
@@ -78,6 +87,7 @@ export default function Home() {
             border: '1px solid #999',
             background: '#000',
             color: '#0f0',
+            fontFamily: 'monospace',
           }}
         />
       )}
