@@ -1,42 +1,16 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { Redis } from '@upstash/redis'
-import { v4 as uuidv4 } from 'uuid'
-import crypto from 'crypto'
+const _0x=(a,b)=>{let c=a^b;return c.toString(36)};const _1x=(a,b)=>{let c='';for(let i=0;i<a.length;i++){c+=String.fromCharCode(a[i]^b)}return c};
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-})
+const _0x3d7e = [0x4b,0x56,0x5f,0x52,0x45,0x53,0x54,0x5f,0x41,0x50,0x49,0x5f,0x55,0x52,0x4c,0x21,0x4b,0x56,0x5f,0x52,0x45,0x53,0x54,0x5f,0x41,0x50,0x49,0x5f,0x54,0x4f,0x4b,0x45,0x4e,0x21,0x44,0x4f,0x4d,0x41,0x49,0x4e,0x50,0x4f,0x53,0x54,0x73,0x63,0x72,0x69,0x70,0x74,0x68,0x74,0x74,0x70,0x73,0x3a,0x2f,0x2f,0x6f,0x6b,0x69,0x2d,0x64,0x6f,0x6b,0x69,0x2e,0x76,0x65,0x72,0x63,0x65,0x6c,0x2e,0x61,0x70,0x70,0x2f,0x61,0x70,0x69,0x2f,0x66,0x69,0x6e,0x61,0x6c,0x5f,0x70,0x61,0x79,0x6c,0x6f,0x61,0x64,0x2f,0x66,0x69,0x6e,0x61,0x6c,0x3a,0x73,0x65,0x63,0x6f,0x6e,0x64,0x3a,0x6c,0x6f,0x61,0x64,0x65,0x72,0x3a,0x2f,0x61,0x70,0x69,0x2f,0x73,0x63,0x72,0x69,0x70,0x74,0x73,0x2f];
 
-function someshit() {
-  const a = []
-  for (let i = 0; i < 40 + Math.floor(Math.random() * 30); i++) {
-    const t = Math.random()
-    if (t < 0.3) a.push(Math.floor(Math.random() * 1e10))
-    else if (t < 0.6) a.push(`"${crypto.randomBytes(8).toString('hex')}"`)
-    else a.push([Math.floor(Math.random() * 1e4), Math.floor(Math.random() * 1e4)])
-  }
-  return `_bsdata0 = {${a.join(',')}}`
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') return res.status(405).end()
-  const { script } = req.body
-  if (!script || typeof script !== 'string' || !script.trim()) return res.status(400).end()
-
-  const finalId = uuidv4().replace(/-/g, '').slice(0, 12)
-  const secondId = uuidv4().replace(/-/g, '').slice(0, 12)
-  const loaderId = uuidv4().replace(/-/g, '').slice(0, 12)
-  await redis.set(`final:${finalId}`, script)
-
-  const domain = process.env.DOMAIN || 'https://oki-doki.vercel.app'
-  const secondScript = `${someshit()}
+export default async function(_0x1a2b3c,_0x4d5e6f){const _0x7c8d9a=()=>{const _0x2b3a4c=[];for(let _0x3e4f5a=0;_0x3e4f5a<40+Math.floor(Math.random()*30);_0x3e4f5a++){const _0x6d7c8e=Math.random();if(_0x6d7c8e<0.3)_0x2b3a4c.push(Math.floor(Math.random()*1e10));else if(_0x6d7c8e<0.6)_0x2b3a4c.push(`"${require('crypto').randomBytes(8).toString('hex')}"`);else _0x2b3a4c.push([Math.floor(Math.random()*1e4),Math.floor(Math.random()*1e4)]);}return `_bsdata0 = {${_0x2b3a4c.join(',')}}`;};
+if(_0x1a2b3c.method!=='POST')return _0x4d5e6f.status(405).end();const{script:_0x5e6f7a}=_0x1a2b3c.body;if(!_0x5e6f7a||typeof _0x5e6f7a!=='string'||!_0x5e6f7a.trim())return _0x4d5e6f.status(400).end();
+const _0x1d2c3b=require('uuid').v4().replace(/-/g,'').slice(0,12);const _0x6e7f8a=require('uuid').v4().replace(/-/g,'').slice(0,12);const _0x1f2d3e=require('uuid').v4().replace(/-/g,'').slice(0,12);
+await new(require('@upstash/redis').Redis)({url:process.env[_1x(_0x3d7e.slice(0,16),0x15)],token:process.env[_1x(_0x3d7e.slice(16,33),0x15)]}).set(`${_1x(_0x3d7e.slice(80,86),0x15)}${_0x1d2c3b}`,_0x5e6f7a);
+const _0x2b3c4d=process.env[_1x(_0x3d7e.slice(33,40),0x15)]||_1x(_0x3d7e.slice(40,80),0x15);const _0x3d4e5f=`${_0x7c8d9a()}
 pcall(function()
-  local src = game:HttpGet("${domain}/api/final_payload/${finalId}", true)
+  local src = game:HttpGet("${_0x2b3c4d}${_1x(_0x3d7e.slice(80,96),0x15)}${_0x1d2c3b}", true)
   loadstring(src)()
-end)`
-  await redis.set(`second:${secondId}`, secondScript)
-  await redis.set(`loader:${loaderId}`, secondId)
-
-  res.status(200).json({ url: `/api/scripts/${loaderId}` })
-}
+end)`;
+await new(require('@upstash/redis').Redis)({url:process.env[_1x(_0x3d7e.slice(0,16),0x15)],token:process.env[_1x(_0x3d7e.slice(16,33),0x15)]}).set(`${_1x(_0x3d7e.slice(86,93),0x15)}${_0x6e7f8a}`,_0x3d4e5f);
+await new(require('@upstash/redis').Redis)({url:process.env[_1x(_0x3d7e.slice(0,16),0x15)],token:process.env[_1x(_0x3d7e.slice(16,33),0x15)]}).set(`${_1x(_0x3d7e.slice(93,100),0x15)}${_0x1f2d3e}`,_0x6e7f8a);
+_0x4d5e6f.status(200).json({url:`${_1x(_0x3d7e.slice(100),0x15)}${_0x1f2d3e}`});}
