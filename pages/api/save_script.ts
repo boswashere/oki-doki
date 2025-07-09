@@ -16,7 +16,7 @@ function someshit() {
     else if (t < 0.6) a.push(`"${crypto.randomBytes(8).toString('hex')}"`)
     else a.push([Math.floor(Math.random() * 1e4), Math.floor(Math.random() * 1e4)])
   }
-  return `_bsdata0 = {${a.join(',')}};`
+  return `_bsdata0 = {${a.join(',')}}`
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,12 +24,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { script } = req.body
   if (!script || typeof script !== 'string' || !script.trim()) return res.status(400).end()
 
-  const realid = uuidv4().replace(/-/g, '').slice(0, 12)
-  const outerid = uuidv4().replace(/-/g, '').slice(0, 12)
-  const body = someshit() + '\n' + script
+  const finalId = uuidv4().replace(/-/g, '').slice(0, 12)
+  const secondId = uuidv4().replace(/-/g, '').slice(0, 12)
+  const loaderId = uuidv4().replace(/-/g, '').slice(0, 12)
+  await redis.set(`final:${finalId}`, script)
 
-  await redis.set(`script:${realid}`, body)
-  await redis.set(`loader:${outerid}`, realid)
+  const domain = process.env.DOMAIN || 'https://oki-doki.vercel.app'
+  const secondScript = `${someshit()}
+pcall(function()
+  local src = game:HttpGet("${domain}/api/final_payload/${finalId}", true)
+  loadstring(src)()
+end)`
+  await redis.set(`second:${secondId}`, secondScript)
+  await redis.set(`loader:${loaderId}`, secondId)
 
-  res.status(200).json({ url: `/api/scripts/${outerid}` })
+  res.status(200).json({ url: `/api/scripts/${loaderId}` })
 }
