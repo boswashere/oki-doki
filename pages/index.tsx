@@ -27,6 +27,7 @@ export default function Home() {
       const id = data.url.split('/').pop()
       const domain = window.location.origin
 
+      // loadstring includes the dynamic headers required to fetch the script man this so hard i hate my life genuinely
       setResult(
         `loadstring(game:HttpGet("${domain}/api/scripts/${id}", true, {["x-bsdata"]="${bsdata}", ["x-hwid"]="${hwid}"}))()`
       )
