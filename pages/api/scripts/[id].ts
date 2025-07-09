@@ -1,1 +1,29 @@
-const _0x4a2f=(function(){const _0x8b1e=['KV_REST_API_URL','KV_REST_API_TOKEN','Redis','get','loader:','i\x20wanna\x20die','http://','https://','/api/data/','loadstring(game:HttpGet(\x22','\x22,true))()','text/plain','Content-Type','setHeader','status','send','host','localhost','startsWith','id','kms'];let _0x3c7d=!![];return function(_0x59d2,_0x2a7f){const _0x1e3b=_0x3c7d?function(){if(_0x2a7f){const _0x5f8a=_0x2a7f.apply(_0x59d2,arguments);return _0x2a7f=null,_0x5f8a;}}:function(){};return _0x3c7d=![],_0x1e3b;};}());const _0x4d29=_0x4a2f(this,function(){const _0x3e81=function(){const _0x7b92=Function('return\x20(function()\x20'+'{}.constructor(\x22return\x20this\x22)(\x20)'+');');return _0x7b92();};const _0x6f4c=_0x3e81();const _0x2d45=function(){let _0x1a6d;try{_0x1a6d=Function('return\x20(function()\x20'+'{}.constructor(\x22return\x20this\x22)(\x20)'+');')();}catch(_0x5c42){_0x1a6d=_0x6f4c;}return _0x1a6d;};const _0x2e7d4a=_0x2d45();return _0x2e7d4a.console=_0x2e7d4a.console||{},_0x2e7d4a.console.log=_0x2e7d4a.console.log||function(){},_0x2e7d4a.console.warn=_0x2e7d4a.console.warn||function(){},_0x2e7d4a.console.error=_0x2e7d4a.console.error||function(){},_0x2e7d4a.console.exception=_0x2e7d4a.console.exception||function(){},_0x2e7d4a.console.trace=_0x2e7d4a.console.trace||function();});_0x4d29();const _0x5b1e2d=new (require('@upstash/redis').Redis)({url:process.env[_0x8b1e[0x0]],token:process.env[_0x8b1e[0x1]]});export default async function(_0x3e8a1d,_0x1a7f3b){const _0x4d2f9c=_0x3e8a1d.query[_0x8b1e[0x13]];if(!_0x4d2f9c||typeof _0x4d2f9c!=='string')return _0x1a7f3b[_0x8b1e[0xe]](0x190)[_0x8b1e[0xf]](_0x8b1e[0x14]);const _0x5f8a=await _0x5b1e2d[_0x8b1e[0x3]](_0x8b1e[0x4]+_0x4d2f9c);if(!_0x5f8a)return _0x1a7f3b[_0x8b1e[0xe]](0x194)[_0x8b1e[0xf]](_0x8b1e[0x5]);const _0x1a6d=_0x3e8a1d.headers[_0x8b1e[0x10]]?.[_0x8b1e[0x12]](_0x8b1e[0x11])?_0x8b1e[0x6]+_0x3e8a1d.headers[_0x8b1e[0x10]]:_0x8b1e[0x7]+_0x3e8a1d.headers[_0x8b1e[0x10]];_0x1a7f3b[_0x8b1e[0xd]](_0x8b1e[0xc],_0x8b1e[0xb]);return _0x1a7f3b[_0x8b1e[0xe]](0xc8)[_0x8b1e[0xf]](_0x8b1e[0x9]+_0x1a6d+_0x8b1e[0x8]+_0x5f8a+_0x8b1e[0xa]);}
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { Redis } from '@upstash/redis'
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+})
+
+const expectedUA = 'roblox-custom-ua-0987fhsdkj'
+const expectedToken = 'super-secret-token-23423'
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const ua = req.headers['user-agent']
+  const token = req.headers['x-auth-token']
+  const hwid = req.headers['x-hwid']
+
+  if (!ua || !token || !hwid) return res.status(403).send('kms')
+  if (ua !== expectedUA) return res.status(403).send('kms')
+  if (token !== expectedToken) return res.status(403).send('kms')
+
+  const id = req.query.id
+  if (!id || typeof id !== 'string') return res.status(400).send('kms')
+
+  const script = await redis.get(`script:${id}`)
+  if (!script) return res.status(404).send('kms')
+
+  res.setHeader('Content-Type', 'text/plain')
+  res.status(200).send(script)
+}
