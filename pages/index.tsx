@@ -8,19 +8,15 @@ export default function Home() {
 
   const handleSubmit = async () => {
     if (!text.trim()) return setError('kms')
-
     setError('')
     setLoading(true)
-
     try {
       const res = await fetch('/api/save_script', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ script: text }),
       })
-
       if (!res.ok) throw new Error()
-
       const data = await res.json()
       const id = data.url.split('/').pop()
       const domain = window.location.origin
