@@ -6,31 +6,25 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  async function someshit3() {
+  async function someshit() {
     if (!text.trim()) return setError('kms')
 
     setError('')
     setLoading(true)
 
     try {
-      const tokenRes = await fetch('/api/get_token')
-      if (!tokenRes.ok) throw new Error()
-      const { bsdata, hwid } = await tokenRes.json()
-
-      const saveRes = await fetch('/api/save_script', {
+      const res = await fetch('/api/save_script', {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ script: text }),
       })
-      if (!saveRes.ok) throw new Error()
-      const data = await saveRes.json()
+
+      if (!res.ok) throw new Error()
+
+      const data = await res.json()
       const id = data.url.split('/').pop()
       const domain = window.location.origin
-
-      // loadstring includes the dynamic headers required to fetch the script man this so hard i hate my life genuinely
-      setResult(
-        `loadstring(game:HttpGet("${domain}/api/scripts/${id}", true, {["x-bsdata"]="${bsdata}", ["x-hwid"]="${hwid}"}))()`
-      )
+      setResult(`loadstring(game:HttpGet("${domain}/api/scripts/${id}", true))()`)
     } catch {
       setError('i wanna die')
       setResult('')
@@ -60,7 +54,7 @@ export default function Home() {
       />
       {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
       <button
-        onClick={someshit3}
+        onClick={someshit}
         disabled={loading}
         style={{
           width: '100%',
