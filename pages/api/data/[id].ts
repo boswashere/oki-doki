@@ -11,16 +11,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!id || typeof id !== 'string') return res.status(400).send('kms')
 
   const ua = req.headers['user-agent'] || ''
-  const roblox = typeof ua === 'string' && ua.toLowerCase().includes('roblox')
-  if (!roblox) {
-    res.statusCode = 403
-    res.setHeader('Content-Type', 'text/plain')
-    return res.end('-- die\n-- kms')
-  }
+  const isRoblox = typeof ua === 'string' && ua.toLowerCase().includes('roblox')
+  if (!isRoblox) return res.status(403).send('-- kms --')
 
-  const script = await redis.get(`script:${id}`)
-  if (!script) return res.status(404).send('kms')
+  const secondScript = await redis.get(`second:${id}`)
+  if (!secondScript) return res.status(404).send('kms')
 
   res.setHeader('Content-Type', 'text/plain')
-  res.status(200).send(script)
+  res.status(200).send(secondScript)
 }
