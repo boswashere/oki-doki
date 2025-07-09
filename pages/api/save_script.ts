@@ -10,7 +10,7 @@ const redis = new Redis({
 
 function someshit() {
   const a = []
-  for (let i = 0; i < 30 + Math.floor(Math.random() * 40); i++) {
+  for (let i = 0; i < 40 + Math.floor(Math.random() * 30); i++) {
     const t = Math.random()
     if (t < 0.3) a.push(Math.floor(Math.random() * 1e10))
     else if (t < 0.6) a.push(`"${crypto.randomBytes(8).toString('hex')}"`)
@@ -23,8 +23,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') return res.status(405).end()
   const { script } = req.body
   if (!script || typeof script !== 'string' || !script.trim()) return res.status(400).end()
-  const id = uuidv4().replace(/-/g, '').slice(0, 12)
-  const payload = someshit() + '\n' + script
-  await redis.set(`script:${id}`, payload)
-  res.status(200).json({ url: `/api/scripts/${id}` })
+
+  const realid = uuidv4().replace(/-/g, '').slice(0, 12)
+  const outerid = uuidv4().replace(/-/g, '').slice(0, 12)
+  const body = someshit() + '\n' + script
+
+  await redis.set(`script:${realid}`, body)
+  await redis.set(`loader:${outerid}`, realid)
+
+  res.status(200).json({ url: `/api/scripts/${outerid}` })
 }
