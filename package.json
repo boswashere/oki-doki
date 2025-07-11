@@ -11,7 +11,8 @@
     "react": "latest",
     "react-dom": "latest",
     "@upstash/redis": "latest",
-    "node-fetch": "latest"
+    "node-fetch": "latest",
+    "uuid": "latest"
   },
   "devDependencies": {
     "typescript": "latest",
