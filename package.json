@@ -18,6 +18,7 @@
     "tailwindcss": "latest",
     "postcss": "latest",
     "autoprefixer": "latest",
+    "@tailwindcss/postcss": "latest",
     "typescript": "latest",
     "@types/react": "latest",
     "@types/node": "latest"
