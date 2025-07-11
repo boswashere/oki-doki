@@ -3,14 +3,14 @@ import { useState } from 'react'
 export default function page() {
   const [script, set_script] = useState('')
   const [output, set_output] = useState('')
-  const [error, set_error] = useState('')
   const [loading, set_loading] = useState(false)
+  const [error, set_error] = useState('')
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     set_loading(true)
-    set_output('')
     set_error('')
+    set_output('')
     try {
       const res = await fetch('/api/smthg', {
         method: 'POST',
@@ -28,34 +28,35 @@ export default function page() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-neutral-950 text-white flex items-center justify-center p-4">
-      <form onSubmit={submit} className="w-full max-w-3xl glass p-6 rounded-2xl backdrop-blur-md space-y-6 border border-white/10 shadow-xl animate-fade-in">
-        <h1 className="text-3xl font-semibold text-center tracking-tight">upload script</h1>
+    <main className="max-w-xl mx-auto p-8">
+      <h1 className="text-4xl mb-8 text-pink text-center">sybau uploader</h1>
+      <form onSubmit={submit} className="flex flex-col gap-4">
         <textarea
           value={script}
           onChange={(e) => set_script(e.target.value)}
-          rows={10}
-          className="w-full p-4 rounded-xl bg-neutral-800/60 text-sm text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 resize-none"
-          placeholder="paste script here(can be urls such as pastebin)"
+          rows={12}
+          placeholder="paste script here(can be urls aswellg)"
+          className="bg-darkgray rounded-lg p-4 resize-y text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink transition"
+          disabled={loading}
+          spellCheck={false}
         />
+        {error && <div className="text-red-500 text-center">{error}</div>}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-fuchsia-600 hover:bg-fuchsia-700 active:scale-95 transition-transform text-white py-3 rounded-xl font-medium tracking-wide"
+          className="bg-pink text-white py-3 rounded-lg font-semibold hover:bg-pink/90 transition disabled:opacity-60"
         >
           {loading ? 'uploading...' : 'upload'}
         </button>
-        {output && (
-          <div className="bg-neutral-800/70 p-4 rounded-xl text-sm break-words border border-neutral-700">
-            {output}
-          </div>
-        )}
-        {error && (
-          <div className="bg-red-700/80 p-4 rounded-xl text-sm text-red-100 border border-red-900">
-            {error}
-          </div>
-        )}
       </form>
-    </div>
+      {output && (
+        <input
+          readOnly
+          onFocus={(e) => e.target.select()}
+          value={output}
+          className="mt-8 w-full bg-black text-green-400 p-3 rounded-lg font-mono select-all"
+        />
+      )}
+    </main>
   )
 }
