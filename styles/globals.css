@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
 body {
-  background-color: #000;
-  color: #f0a;
-  font-family: 'Inter', sans-serif;
+  @apply bg-bg text-fg font-sans min-h-screen;
 }
