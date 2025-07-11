@@ -102,7 +102,7 @@ export default function Home() {
             transition: 'all 0.2s ease-in-out',
           }}
         >
-          {load ? 'uploading...' : 'Upload'}
+          {load ? 'uploading' : 'upload'}
         </button>
 
         {res && (
