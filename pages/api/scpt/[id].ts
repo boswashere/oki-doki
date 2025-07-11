@@ -16,7 +16,7 @@ async function someshit2(script: string) {
     body: JSON.stringify({ script }),
   })
 
-  const data = await res.json()
+  const data = (await res.json()) as { obfuscated?: string }
   if (!data.obfuscated) throw new Error('die please die')
   return data.obfuscated
 }
@@ -25,8 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { id } = req.query
   if (!id || typeof id !== 'string') return res.status(400).send('sarah please kill me ')
   const script = await r.get(`script:${id}`)
-  if (!script) return res.status(404).send('do it sarah kill me')
-  if (typeof script !== 'string') return res.status(500).send('quite smarter ig')
+  if (!script || typeof script !== 'string') return res.status(404).send('do it sarah kill me')
   try {
     const obf = await someshit2(script)
     res.setHeader('content-type', 'text/plain')
