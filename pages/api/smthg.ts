@@ -18,9 +18,16 @@ export async function obfuscate(script: string): Promise<string> {
     body: JSON.stringify({ script })
   })
 
-  const data = await res.json()
-  if (!data.obfuscated) throw new Error('Obfuscation failed')
-  return data.obfuscated
+  const data: unknown = await res.json()
+  if (
+    typeof data === 'object' &&
+    data !== null &&
+    'obfuscated' in data &&
+    typeof (data as any).obfuscated === 'string'
+  ) {
+    return (data as any).obfuscated
+  }
+  throw new Error('obfuscation failed: invalid response')
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
