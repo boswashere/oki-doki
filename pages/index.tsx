@@ -13,7 +13,7 @@ export default function Home() {
 
     try {
       const r = await fetch('/api/smthg', {
-        method: 'post',
+        method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ script: text }),
       })
@@ -31,13 +31,36 @@ export default function Home() {
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: '2rem auto', fontFamily: 'monospace' }}>
-      <div style={{ textAlign: 'center', marginBottom: 20, fontSize: '1.5rem' }}>sybau uploader</div>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: '2rem auto',
+        fontFamily: 'monospace',
+        backgroundColor: '#000',
+        color: '#fff',
+        minHeight: '100vh',
+        padding: 20,
+        boxSizing: 'border-box',
+      }}
+    >
+      <div style={{ textAlign: 'center', marginBottom: 20, fontSize: '1.5rem' }}>
+        sybau uploader
+      </div>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={12}
-        style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #999', resize: 'vertical', background: '#111', color: '#eee' }}
+        style={{
+          width: '100%',
+          padding: 10,
+          borderRadius: 6,
+          border: '1px solid #444',
+          resize: 'vertical',
+          backgroundColor: '#000',
+          color: '#fff',
+          outline: 'none',
+          fontFamily: 'monospace',
+        }}
         disabled={load}
         spellCheck={false}
       />
@@ -45,7 +68,17 @@ export default function Home() {
       <button
         onClick={someshit}
         disabled={load}
-        style={{ width: '100%', marginTop: 16, padding: 12, background: '#0070f3', color: '#fff', border: 'none', borderRadius: 6 }}
+        style={{
+          width: '100%',
+          marginTop: 16,
+          padding: 12,
+          backgroundColor: '#fff',
+          color: '#000',
+          border: 'none',
+          borderRadius: 6,
+          cursor: load ? 'not-allowed' : 'pointer',
+          fontWeight: 'bold',
+        }}
       >
         {load ? 'uploading...' : 'upload'}
       </button>
@@ -55,7 +88,16 @@ export default function Home() {
           value={res}
           readOnly
           onFocus={(e) => e.target.select()}
-          style={{ marginTop: 20, width: '100%', padding: 10, borderRadius: 6, border: '1px solid #999', background: '#000', color: '#0f0' }}
+          style={{
+            marginTop: 20,
+            width: '100%',
+            padding: 10,
+            borderRadius: 6,
+            border: '1px solid #444',
+            backgroundColor: '#000',
+            color: '#0f0',
+            fontFamily: 'monospace',
+          }}
         />
       )}
     </div>
