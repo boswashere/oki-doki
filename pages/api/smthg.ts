@@ -9,13 +9,12 @@ const r = new Redis({
 })
 
 const domain = 'https://oki-doki.vercel.app'
-
 async function obfuscate(script: string) {
   const res = await fetch('https://wearedevs.net/api/obfuscate', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'user-agent': 'roblox',
+      'user-agent': 'Roblox',
     },
     body: JSON.stringify({ script }),
   })
@@ -27,7 +26,6 @@ async function obfuscate(script: string) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end()
-  if (!req.headers['user-agent']?.includes('Roblox')) return res.status(403).end()
   const { script } = req.body
   if (!script || typeof script !== 'string' || !script.trim()) return res.status(400).json({ error: 'invalid script' })
   const id = v4().replace(/-/g, '').slice(0, 12)
