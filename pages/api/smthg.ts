@@ -38,9 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const id = uuidv4().replace(/-/g, '').slice(0, 12)
   await store.set(`script:${id}`, script)
-  const domain = req.headers.host?.startsWith('localhost')
-    ? `http://${req.headers.host}`
-    : `https://${req.headers.host}`
+  const domain = 'https://oki-doki.vercel.app'
   const loader = `loadstring(game:HttpGet("${domain}/api/scpt/${id}", true))()`
   const obfuscated = await obfuscate(loader)
   const final = `loadstring("${obfuscated.replace(/"/g, '\\"')}")()`
