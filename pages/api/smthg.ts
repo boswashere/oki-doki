@@ -9,6 +9,7 @@ const r = new Redis({
 })
 
 const domain = 'https://oki-doki-u721.vercel.app'
+
 async function obfuscate(script: string) {
   const res = await fetch('https://wearedevs.net/api/obfuscate', {
     method: 'POST',
@@ -21,7 +22,12 @@ async function obfuscate(script: string) {
   if (!res.ok) throw new Error('obfuscation failed')
   const data = (await res.json()) as { obfuscated?: string }
   if (!data.obfuscated) throw new Error('obfuscation failed')
-  return data.obfuscated
+
+  const cleaned = data.obfuscated.replace(
+    /^loadstring\(\[\=+\[\-\-\[\[.*?\]\]\s*/s,
+    'loadstring([==[--[[ nexus x prometheus ]] '
+  )
+  return cleaned
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
