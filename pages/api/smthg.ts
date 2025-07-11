@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 } from 'uuid'
 
-const store = new Map<string, string>()
+export const store = new Map<string, string>()
 const obfApi = 'https://wearedevs.net/api/obfuscate/'
 
 async function someshit(script: string) {
