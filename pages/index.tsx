@@ -2,31 +2,31 @@ import { useState } from 'react'
 
 export default function Home() {
   const [text, setText] = useState('')
-  const [result, setResult] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [res, setRes] = useState('')
+  const [load, setLoad] = useState(false)
+  const [err, setErr] = useState('')
 
-  const someshit = async () => {
-    if (!text.trim()) return setError('kms')
-    setError('')
-    setLoading(true)
+  async function someshit() {
+    if (!text.trim()) return setErr('kms')
+    setErr('')
+    setLoad(true)
 
     try {
-      const res = await fetch('/api/save_script', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const r = await fetch('/api/smthg', {
+        method: 'post',
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ script: text }),
       })
-      if (!res.ok) throw new Error()
-      const data = await res.json()
-      const domain = window.location.origin
-      const id = data.url.split('/').pop()
-      setResult(`loadstring(game:HttpGet("${domain}/api/loader/${id}", true))()`)
+
+      if (!r.ok) throw new Error()
+
+      const d = await r.json()
+      setRes(d.loader)
     } catch {
-      setError('i wanna die')
-      setResult('')
+      setErr('i wanna die')
+      setRes('')
     } finally {
-      setLoading(false)
+      setLoad(false)
     }
   }
 
@@ -37,49 +37,25 @@ export default function Home() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={12}
-        style={{
-          width: '100%',
-          padding: 10,
-          borderRadius: 6,
-          border: '1px solid #999',
-          resize: 'vertical',
-          background: '#111',
-          color: '#eee',
-        }}
-        disabled={loading}
+        style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #999', resize: 'vertical', background: '#111', color: '#eee' }}
+        disabled={load}
         spellCheck={false}
       />
-      {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
+      {err && <div style={{ color: 'red', marginTop: 8 }}>{err}</div>}
       <button
         onClick={someshit}
-        disabled={loading}
-        style={{
-          width: '100%',
-          marginTop: 16,
-          padding: 12,
-          background: '#0070f3',
-          color: '#fff',
-          border: 'none',
-          borderRadius: 6,
-        }}
+        disabled={load}
+        style={{ width: '100%', marginTop: 16, padding: 12, background: '#0070f3', color: '#fff', border: 'none', borderRadius: 6 }}
       >
-        {loading ? 'uploading...' : 'upload'}
+        {load ? 'uploading...' : 'upload'}
       </button>
-      {result && (
+      {res && (
         <input
           type="text"
-          value={result}
+          value={res}
           readOnly
           onFocus={(e) => e.target.select()}
-          style={{
-            marginTop: 20,
-            width: '100%',
-            padding: 10,
-            borderRadius: 6,
-            border: '1px solid #999',
-            background: '#000',
-            color: '#0f0',
-          }}
+          style={{ marginTop: 20, width: '100%', padding: 10, borderRadius: 6, border: '1px solid #999', background: '#000', color: '#0f0' }}
         />
       )}
     </div>
