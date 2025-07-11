@@ -9,17 +9,18 @@ const r = new Redis({
 })
 
 const domain = 'https://oki-doki.vercel.app'
+
 async function obfuscate(script: string) {
   const res = await fetch('https://wearedevs.net/api/obfuscate', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'user-agent': 'Roblox',
+      'user-agent': 'roblox',
     },
     body: JSON.stringify({ script }),
   })
   if (!res.ok) throw new Error('obfuscation failed')
-  const data = await res.json()
+  const data = (await res.json()) as { obfuscated?: string }
   if (!data.obfuscated) throw new Error('obfuscation failed')
   return data.obfuscated
 }
