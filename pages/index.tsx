@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function page() {
+export default function Page() {
   const [script, set_script] = useState('')
   const [output, set_output] = useState('')
   const [error, set_error] = useState('')
@@ -28,27 +28,31 @@ export default function page() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4">
-      <div className="w-full max-w-xl bg-input p-8 rounded-2xl shadow-xl space-y-6">
-        <h1 className="text-3xl text-center text-primary font-bold">sybau uploader</h1>
+    <main className="flex items-center justify-center min-h-screen px-4">
+      <div className="w-full max-w-xl bg-input p-8 rounded-2xl shadow-2xl space-y-6">
+        <h1 className="text-3xl md:text-4xl text-center font-bold text-primary">sybau uploader</h1>
+
         <form onSubmit={submit} className="space-y-4">
           <textarea
             value={script}
             onChange={e => set_script(e.target.value)}
-            rows={8}
-            placeholder="paste script here can be url"
-            className="w-full p-4 bg-bg rounded-lg text-fg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            rows={6}
+            placeholder="Paste script or URL here"
+            className="w-full p-4 bg-bg rounded-lg text-fg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
             disabled={loading}
           />
-          {error && <div className="text-red-500 text-center">{error}</div>}
+
+          {error && <p className="text-red-500 text-center">{error}</p>}
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-primary text-white rounded-xl hover:opacity-90 transition"
+            className="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:opacity-90 transition"
           >
-            {loading ? 'uploading...' : 'upload'}
+            {loading ? 'Uploading...' : 'Upload'}
           </button>
         </form>
+
         {output && (
           <textarea
             readOnly
@@ -59,6 +63,6 @@ export default function page() {
           />
         )}
       </div>
-    </div>
+    </main>
   )
 }
