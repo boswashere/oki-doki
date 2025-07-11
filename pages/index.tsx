@@ -28,35 +28,40 @@ export default function page() {
   }
 
   return (
-    <main className="max-w-xl mx-auto p-8">
-      <h1 className="text-4xl mb-8 text-pink text-center">sybau uploader</h1>
-      <form onSubmit={submit} className="flex flex-col gap-4">
-        <textarea
-          value={script}
-          onChange={(e) => set_script(e.target.value)}
-          rows={12}
-          placeholder="paste script here(can be urls aswellg)"
-          className="bg-darkgray rounded-lg p-4 resize-y text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink transition"
-          disabled={loading}
-          spellCheck={false}
-        />
-        {error && <div className="text-red-500 text-center">{error}</div>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-pink text-white py-3 rounded-lg font-semibold hover:bg-pink/90 transition disabled:opacity-60"
-        >
-          {loading ? 'uploading...' : 'upload'}
-        </button>
-      </form>
-      {output && (
-        <input
-          readOnly
-          onFocus={(e) => e.target.select()}
-          value={output}
-          className="mt-8 w-full bg-black text-green-400 p-3 rounded-lg font-mono select-all"
-        />
-      )}
-    </main>
+    <div className="min-h-screen bg-gradient-conic from-primary via-accent to-secondary flex items-center justify-center p-6">
+      <div className="w-full max-w-3xl glass p-8 space-y-6 animate-fade">
+        <h1 className="text-5xl font-sans text-primary text-center neon-pink animate-pulse-neon">
+          sybau uploader
+        </h1>
+        <form onSubmit={submit} className="space-y-4">
+          <textarea
+            value={script}
+            onChange={(e) => set_script(e.target.value)}
+            rows={10}
+            placeholder="paste script here"
+            className="w-full p-4 bg-darkgray rounded-2xl text-textLight placeholder-lightgray focus:ring-2 focus:ring-accent transition resize-none"
+            disabled={loading}
+          />
+          {error && <div className="text-red-500 text-center">{error}</div>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:shadow-neon-pink active:scale-95 transition"
+          >
+            {loading ? 'uploading...' : 'upload'}
+          </button>
+        </form>
+        {output && (
+          <div className="pt-4">
+            <input
+              readOnly
+              onFocus={(e) => e.target.select()}
+              value={output}
+              className="w-full p-4 bg-darkgray rounded-2xl font-mono text-textLight break-words select-all"
+            />
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
