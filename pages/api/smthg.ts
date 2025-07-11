@@ -23,7 +23,7 @@ async function f(s: string) {
 
   const j = await res.json()
   if (!j || typeof j !== 'object' || !('obfuscated' in j)) throw new Error('obfuscation failed')
-  return (j as any).obfuscated.replace(/^\s*loadstring\(\[\=+\[\-\-\[\[.*?\]\]\s*/s, 'loadstring([==[')
+  return (j as any).obfuscated.replace(/^\s*loadstring\(\[\=+\[\-\-\[\[[\s\S]*?\]\]\s*/, 'loadstring([==[')
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
