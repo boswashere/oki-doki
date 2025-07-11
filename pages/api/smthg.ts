@@ -22,12 +22,11 @@ async function obfuscate(script: string) {
   if (!res.ok) throw new Error('obfuscation failed')
   const data = (await res.json()) as { obfuscated?: string }
   if (!data.obfuscated) throw new Error('obfuscation failed')
-
-  const cleaned = data.obfuscated.replace(
-    /^loadstring\(\[\=+\[\-\-\[\[.*?\]\]\s*/s,
-    'loadstring([==[--[[ nexus x prometheus ]] '
+  const sanitized = data.obfuscated.replace(
+    /--\[\[\s*v\d+\.\d+\.\d+\s+https:\/\/wearedevs\.net\/obfuscator\s*\]\]/,
+    '--[[ nexus x prometheus ]]'
   )
-  return cleaned
+  return sanitized
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
