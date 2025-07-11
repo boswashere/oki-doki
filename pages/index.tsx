@@ -1,129 +1,57 @@
 import { useState } from 'react'
 
-export default function Home() {
-  const [text, setText] = useState('')
-  const [res, setRes] = useState('')
-  const [load, setLoad] = useState(false)
-  const [err, setErr] = useState('')
+export default function page() {
+  const [script, set_script] = useState('')
+  const [output, set_output] = useState('')
+  const [error, set_error] = useState('')
+  const [loading, set_loading] = useState(false)
 
-  async function someshit() {
-    if (!text.trim()) return setErr('kms')
-    setErr('')
-    setLoad(true)
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    set_loading(true)
+    set_output('')
+    set_error('')
+
     try {
-      const r = await fetch('/api/smthg', {
-        method: 'post',
+      const res = await fetch('/api/smthg', {
+        method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ script: text }),
+        body: JSON.stringify({ script }),
       })
-      if (!r.ok) throw new Error()
-      const d = await r.json()
-      setRes(d.loader)
-    } catch {
-      setErr('i wanna die')
-      setRes('')
+      const data = await res.json()
+      if (!res.ok || !data.loader) throw new Error(data.error || 'fail')
+      set_output(data.loader)
+    } catch (err: any) {
+      set_error(err.message || 'fail')
     } finally {
-      setLoad(false)
+      set_loading(false)
     }
   }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: '#0f0f1a',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '2rem',
-        fontFamily: 'monospace',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 700,
-          background: '#161622',
-          borderRadius: '20px',
-          padding: '2rem',
-          boxShadow: '0 0 30px rgba(255, 20, 147, 0.2)',
-          color: '#fff',
-        }}
-      >
-        <h1
-          style={{
-            textAlign: 'center',
-            marginBottom: '1.5rem',
-            fontSize: '2rem',
-            color: '#ff69b4',
-            textShadow: '0 0 10px #ff69b4',
-          }}
-        >
-          nexus
-        </h1>
-
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+      <form onSubmit={submit} className="w-full max-w-2xl space-y-4">
         <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={12}
-          placeholder="paste your script here...(can be a url)"
-          style={{
-            width: '100%',
-            padding: '1rem',
-            borderRadius: '12px',
-            border: '1px solid #ff69b4',
-            background: '#0d0d18',
-            color: '#fff',
-            resize: 'vertical',
-            fontSize: '1rem',
-            outline: 'none',
-          }}
-          disabled={load}
-          spellCheck={false}
+          value={script}
+          onChange={(e) => set_script(e.target.value)}
+          rows={10}
+          className="w-full p-4 bg-neutral-900 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none"
+          placeholder="paste script here(can be urls)"
         />
-        {err && (
-          <div style={{ color: '#ff4d4d', marginTop: '0.5rem', fontWeight: 'bold' }}>{err}</div>
-        )}
         <button
-          onClick={someshit}
-          disabled={load}
-          style={{
-            width: '100%',
-            marginTop: '1rem',
-            padding: '0.75rem',
-            background: '#ff69b4',
-            color: '#fff',
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            border: 'none',
-            borderRadius: '10px',
-            cursor: load ? 'not-allowed' : 'pointer',
-            boxShadow: '0 0 10px #ff69b4, 0 0 20px #ff1493',
-            transition: 'all 0.2s ease-in-out',
-          }}
+          type="submit"
+          disabled={loading}
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition"
         >
-          {load ? 'uploading' : 'upload'}
+          {loading ? 'uploading...' : 'upload'}
         </button>
-
-        {res && (
-          <input
-            type="text"
-            value={res}
-            readOnly
-            onFocus={(e) => e.target.select()}
-            style={{
-              marginTop: '1.5rem',
-              width: '100%',
-              padding: '1rem',
-              borderRadius: '12px',
-              border: '1px solid #0f0',
-              background: '#000',
-              color: '#0f0',
-              fontSize: '0.9rem',
-            }}
-          />
+        {output && (
+          <div className="bg-neutral-800 p-3 rounded-lg break-words text-xs">{output}</div>
         )}
-      </div>
+        {error && (
+          <div className="bg-red-800 p-3 rounded-lg text-sm">{error}</div>
+        )}
+      </form>
     </div>
   )
 }
