@@ -9,6 +9,11 @@ const r = new Redis({
 
 const url = 'https://wearedevs.net/api/obfuscate'
 
+type obfuscateResponse = {
+  obfuscated?: string
+  error?: string
+}
+
 async function someshit2(script: string) {
   const res = await fetch(url, {
     method: 'post',
@@ -16,7 +21,7 @@ async function someshit2(script: string) {
     body: JSON.stringify({ script }),
   })
 
-  const data = await res.json()
+  const data: obfuscateResponse = await res.json()
   if (!data.obfuscated) throw new Error('die please die')
   return data.obfuscated
 }
