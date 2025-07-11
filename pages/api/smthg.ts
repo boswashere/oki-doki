@@ -1,40 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { v4 } from 'uuid'
+import { Redis } from '@upstash/redis'
+import { v4 as uuidv4 } from 'uuid'
+import fetch from 'node-fetch'
 
-export const store = new Map<string, string>()
-const obfApi = 'https://wearedevs.net/api/obfuscate/'
+export const store = new Redis({
+  url: process.env.kv_rest_api_url!,
+  token: process.env.kv_rest_api_token!,
+})
 
-async function someshit(script: string) {
-  const res = await fetch(obfApi, {
+export async function obfuscate(script: string): Promise<string> {
+  const res = await fetch('https://wearedevs.net/api/obfuscate', {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
-      'user-agent': 'Mozilla/5.0',
+      'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0'
     },
-    body: JSON.stringify({ script }),
-    redirect: 'follow',
+    body: JSON.stringify({ script })
   })
-  const data = (await res.json()) as { obfuscated?: string; error?: string }
-  if (!data.obfuscated) throw new Error('kms')
+
+  const data = await res.json()
+  if (!data.obfuscated) throw new Error('Obfuscation failed')
   return data.obfuscated
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end()
-  const { script } = req.body as { script?: string }
-  if (!script || typeof script !== 'string') return res.status(400).json({ error: 'kms' })
-  const id = v4().slice(0, 12)
-  store.set(id, script)
-  const proto = req.headers['x-forwarded-proto'] || 'https'
-  const host = req.headers.host
-  const domain = host ? `${proto}://${host}` : 'https://oki-doki.vercel.app'
-  const loaderLua = `loadstring(game:HttpGet("${domain}/api/scpt/${id}",true))()`
-  let obf: string
-  try {
-    obf = await someshit(loaderLua)
-  } catch {
-    return res.status(500).json({ error: 'kms' })
+  const { script } = req.body
+  if (!script || typeof script !== 'string' || !script.trim()) {
+    return res.status(400).json({ error: 'Invalid script' })
   }
-  const wrapped = `loadstring([==[${obf}]==])()`
-  res.status(200).json({ loader: wrapped, id })
+  const id = uuidv4().replace(/-/g, '').slice(0, 12)
+  await store.set(`script:${id}`, script)
+  const domain = req.headers.host?.startsWith('localhost')
+    ? `http://${req.headers.host}`
+    : `https://${req.headers.host}`
+  const loader = `loadstring(game:HttpGet("${domain}/api/scpt/${id}", true))()`
+  const obfuscated = await obfuscate(loader)
+  const final = `loadstring("${obfuscated.replace(/"/g, '\\"')}")()`
+  res.status(200).json({ url: `/api/scpt/${id}`, loader: final })
 }
