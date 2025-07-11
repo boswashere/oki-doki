@@ -8,7 +8,7 @@ const r = new Redis({
   token: process.env.kv_rest_api_token!,
 })
 
-const domain = 'https://oki-doki.vercel.app'
+const domain = 'https://oki-doki-u721.vercel.app'
 async function obfuscate(script: string) {
   const res = await fetch('https://wearedevs.net/api/obfuscate', {
     method: 'POST',
