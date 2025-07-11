@@ -7,10 +7,9 @@ const r = new Redis({
 })
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') return res.status(405).end()
   const { id } = req.query
-  if (req.method !== 'GET' || typeof id !== 'string') {
-    return res.status(400).send('kms')
-  }
+  if (!id || typeof id !== 'string') return res.status(400).send('kms')
   const script = await r.get<string>(`script:${id}`)
   if (!script) return res.status(404).send('kms')
   res.setHeader('content-type', 'text/plain')
