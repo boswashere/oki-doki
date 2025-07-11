@@ -4,5 +4,5 @@
 
 html,
 body {
-  @apply bg-bg text-fg font-sans min-h-screen;
+  @apply bg-bg text-fg font-sans;
 }
