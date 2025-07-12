@@ -15,10 +15,6 @@
     "uuid": "latest"
   },
   "devDependencies": {
-    "tailwindcss": "latest",
-    "@tailwindcss/postcss": "latest",
-    "postcss": "latest",
-    "autoprefixer": "latest",
     "typescript": "latest",
     "@types/react": "latest",
     "@types/node": "latest"
