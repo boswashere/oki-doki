@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-export default function Page() {
+export default function page() {
   const [script, set_script] = useState('')
   const [output, set_output] = useState('')
-  const [error, set_error] = useState('')
   const [loading, set_loading] = useState(false)
+  const [error, set_error] = useState('')
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -28,33 +28,25 @@ export default function Page() {
   }
 
   return (
-    <div className="wrapper">
-      <div className="card">
-        <h1 className="title">sybau uploader</h1>
-        <form onSubmit={submit}>
-          <textarea
-            className="textarea"
-            rows={8}
-            placeholder="paste script or url here"
-            value={script}
-            onChange={(e) => set_script(e.target.value)}
-            disabled={loading}
-          />
-          {error && <div className="error">{error}</div>}
-          <button className="button" type="submit" disabled={loading}>
-            {loading ? 'uploading...' : 'upload'}
-          </button>
-        </form>
-        {output && (
-          <textarea
-            className="output"
-            rows={4}
-            readOnly
-            value={output}
-            onFocus={(e) => e.target.select()}
-          />
-        )}
-      </div>
-    </div>
+    <main style={{ maxWidth: 600, margin: 'auto', padding: 20 }}>
+      <form onSubmit={submit}>
+        <textarea
+          value={script}
+          onChange={(e) => set_script(e.target.value)}
+          rows={10}
+          style={{ width: '100%' }}
+          placeholder="paste script"
+        />
+        <button type="submit" disabled={loading} style={{ marginTop: 10 }}>
+          {loading ? 'loading...' : 'upload'}
+        </button>
+      </form>
+      {output && (
+        <div style={{ marginTop: 20 }}>
+          <pre>{output}</pre>
+        </div>
+      )}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </main>
   )
 }
