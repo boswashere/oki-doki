@@ -15,7 +15,7 @@ export default function Page() {
       const res = await fetch('/api/smthg', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ script })
+        body: JSON.stringify({ script }),
       })
       const data = await res.json()
       if (!res.ok || !data.loader) throw new Error(data.error || 'fail')
@@ -28,41 +28,33 @@ export default function Page() {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-screen px-4">
-      <div className="w-full max-w-xl bg-input p-8 rounded-2xl shadow-2xl space-y-6">
-        <h1 className="text-3xl md:text-4xl text-center font-bold text-primary">sybau uploader</h1>
-
-        <form onSubmit={submit} className="space-y-4">
+    <div className="wrapper">
+      <div className="card">
+        <h1 className="title">sybau uploader</h1>
+        <form onSubmit={submit}>
           <textarea
+            className="textarea"
+            rows={8}
+            placeholder="paste script or url here"
             value={script}
-            onChange={e => set_script(e.target.value)}
-            rows={6}
-            placeholder="Paste script or URL here"
-            className="w-full p-4 bg-bg rounded-lg text-fg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+            onChange={(e) => set_script(e.target.value)}
             disabled={loading}
           />
-
-          {error && <p className="text-red-500 text-center">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:opacity-90 transition"
-          >
-            {loading ? 'Uploading...' : 'Upload'}
+          {error && <div className="error">{error}</div>}
+          <button className="button" type="submit" disabled={loading}>
+            {loading ? 'uploading...' : 'upload'}
           </button>
         </form>
-
         {output && (
           <textarea
+            className="output"
+            rows={4}
             readOnly
             value={output}
-            onFocus={e => e.target.select()}
-            rows={4}
-            className="w-full p-4 bg-bg text-green-400 font-mono rounded-lg"
+            onFocus={(e) => e.target.select()}
           />
         )}
       </div>
-    </main>
+    </div>
   )
 }
